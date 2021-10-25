@@ -28,7 +28,7 @@ EOF
 }
 
 resource "aws_instance" "prod" {
-  key_name = "${aws_key_pair.deployer.key_name}"
+  key_name = "${var.public_key}"
   ami           = "ami-05f7491af5eef733a"
   instance_type = "t2.micro"
   user_data = <<EOF
