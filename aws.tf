@@ -16,6 +16,17 @@ resource "aws_key_pair" "deployer" {
   public_key = "${var.public_key}"
 }
 
+resource "aws_s3_bucket" "b" {
+    bucket = "mybacket2.dmitry-test.com"
+    acl    = "private"
+}
+resource "aws_s3_bucket_object" "folder1" {
+  bucket = "${aws_s3_bucket.b.id}"
+  acl    = "private"
+  key    = "Folder1/"
+  source = "/dev/sdk"
+}
+
 resource "aws_instance" "build" {
   key_name = "${aws_key_pair.deployer.key_name}"
   ami           = "ami-05f7491af5eef733a"
@@ -33,7 +44,7 @@ EOF
 }
 
 resource "aws_instance" "prod" {
-  key_name = "${var.public_key}"
+  key_name = "${aws_key_pair.deployer.key_name}"
   ami           = "ami-05f7491af5eef733a"
   instance_type = "t2.micro"
   user_data = <<EOF
