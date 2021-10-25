@@ -11,8 +11,13 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+resource "aws_key_pair" "deployer" {
+  key_name   = "deployer-key"
+  public_key = "${var.public_key}"
+}
+
 resource "aws_instance" "build" {
-  key_name = "${var.public_key}"
+  key_name = "${aws_key_pair.deployer.key_name}"
   ami           = "ami-05f7491af5eef733a"
   instance_type = "t2.micro"
   user_data = <<EOF
